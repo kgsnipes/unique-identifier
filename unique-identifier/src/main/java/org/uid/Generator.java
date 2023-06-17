@@ -1,6 +1,8 @@
 package org.uid;
 
+import org.uid.exception.GeneratorLimitReachedException;
+
 public interface Generator<T> {
 
-    T getNext();
+    T getNext() throws GeneratorLimitReachedException;
 }

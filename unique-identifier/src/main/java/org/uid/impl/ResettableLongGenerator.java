@@ -3,6 +3,7 @@ package org.uid.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uid.ResettableGenerator;
+import org.uid.exception.GeneratorLimitReachedException;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -33,7 +34,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
     }
 
     @Override
-    public Long getNext() {
+    public Long getNext() throws GeneratorLimitReachedException {
         return super.getNext();
     }
 
