@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.uid.Generator;
 import org.uid.exception.GeneratorLimitReachedException;
 
-
 import java.util.concurrent.atomic.AtomicLong;
 
 public class LongGenerator implements Generator<Long> {
@@ -125,5 +124,10 @@ public class LongGenerator implements Generator<Long> {
 
     protected void setUpperLimitValue(Long upperLimitValue) {
         this.upperLimitValue = upperLimitValue;
+    }
+
+    @Override
+    public String toString() {
+        return this.getCurrentValue().toString();
     }
 }

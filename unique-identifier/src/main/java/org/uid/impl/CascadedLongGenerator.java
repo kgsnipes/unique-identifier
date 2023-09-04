@@ -1,13 +1,12 @@
 package org.uid.impl;
 
 import org.uid.Generator;
+import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,34 +48,54 @@ public class CascadedLongGenerator implements Generator<String> {
         return matches;
     }
     @Override
-    public String getNext() throws GeneratorLimitReachedException {
+    public String getNext() throws GeneratorLimitReachedException, GeneratorException {
+        String nextValue="";
        if(lock.tryLock())
        {
            try
            {
-                long []arr=new long[generatorList.size()];
+                String []arr=new String[generatorList.size()];
                 IntStream.range(0,generatorList.size()).forEach(i->{
-                    if(!generatorList.get(i).hasReachedLimit())
-                    {
-
-                    }else {
-                        arr[i]=generatorList.get(i).getCurrentValue();
+                    try {
+                        arr[i]=generatorList.get(i).getNext().toString();
+                    } catch (GeneratorLimitReachedException | GeneratorException e) {
+                        arr[i]=generatorList.get(i).getCurrentValue().toString();
                     }
                 });
+                nextValue=formatValues(arr);
            }
            finally {
                lock.unlock();
            }
        }
+       else {
+           throw new GeneratorException("Could not acquire a lock on the Generator");
+       }
+
+       return nextValue;
     }
 
     @Override
     public Boolean hasReachedLimit() {
-        return null;
+        return generatorList.size()==generatorList.stream().filter(Generator::hasReachedLimit).count();
     }
 
     @Override
     public String getCurrentValue() {
         return null;
+    }
+
+    private String formatValues(String vals[])
+    {
+        StringBuilder builder=new StringBuilder(this.format);
+        Pattern pattern = Pattern.compile(PLACEHOLDER_REGEX);
+        Matcher matcher = pattern.matcher(builder);
+        int matches = 0;
+        while (matcher.find()) {
+            builder.replace(matcher.start(),matcher.end(),vals[matches]);
+            matcher = pattern.matcher(builder);
+            matches++;
+        }
+        return builder.toString();
     }
 }

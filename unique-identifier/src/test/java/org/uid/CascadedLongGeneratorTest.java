@@ -18,9 +18,25 @@ public class CascadedLongGeneratorTest {
         return matches;
     }
 
+    public String formatValues(String format,String vals[])
+    {
+        StringBuilder builder=new StringBuilder(format);
+        Pattern pattern = Pattern.compile("(\\$\\d)");
+        Matcher matcher = pattern.matcher(builder);
+        int matches = 0;
+        while (matcher.find()) {
+            builder.replace(matcher.start(),matcher.end(),vals[matches]);
+            matcher = pattern.matcher(builder);
+            matches++;
+        }
+        return builder.toString();
+    }
+
     @Test
     public void testMatches()
     {
-        Assertions.assertEquals(3,regexMatchCount("(\\$\\d)","$1-$$2"));
+        String val=formatValues("$1##$2-$3",new String[]{"hello","world","me"});
+        System.out.println(val);
+        Assertions.assertEquals("hello##world-me",val);
     }
 }
