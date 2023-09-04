@@ -1,3 +1,5 @@
+package org.uid;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.uid.exception.GeneratorLimitReachedException;

@@ -11,12 +11,11 @@ import java.util.concurrent.atomic.AtomicLong;
 public class LongGenerator implements Generator<Long> {
 
    private static final Logger log= LoggerFactory.getLogger(LongGenerator.class);
-
    protected AtomicLong value;
    protected Integer stepValue;
-
    protected Long upperLimitValue;
 
+   protected Boolean LIMIT_REACHED=false;
     public LongGenerator() {
         setValue(new AtomicLong(1L));
         setStepValue(1);
@@ -60,6 +59,16 @@ public class LongGenerator implements Generator<Long> {
         return getNextValue();
     }
 
+    @Override
+    public Boolean hasReachedLimit() {
+        return LIMIT_REACHED;
+    }
+
+    @Override
+    public Long getCurrentValue() {
+        return getValue().get();
+    }
+
     private Long getNextValue()throws GeneratorLimitReachedException
     {
         if(getUpperLimitValue()>0)
@@ -73,6 +82,7 @@ public class LongGenerator implements Generator<Long> {
                 {
                     log.debug("Already reached the upper limit of Long");
                 }
+                LIMIT_REACHED=true;
                 throw new GeneratorLimitReachedException();
             }
         }
@@ -86,6 +96,7 @@ public class LongGenerator implements Generator<Long> {
                 {
                     log.debug("Already reached the upper limit of Long");
                 }
+                LIMIT_REACHED=true;
                 throw new GeneratorLimitReachedException();
             }
         }
