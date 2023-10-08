@@ -17,9 +17,10 @@ public class CascadedLongGenerator implements Generator<String> {
     private final String PLACEHOLDER_REGEX="(\\$\\d)";
     private List<Generator> generatorList=new ArrayList<>();
 
+    private static final int LONG_LENGTH=Long.toString(Long.MAX_VALUE).length();
+
     private Boolean stepCompletion[];
     private String format=null;
-
     private final Lock lock=new ReentrantLock();
     public CascadedLongGenerator(String format, Generator<Long> ...generators) {
 
@@ -57,9 +58,17 @@ public class CascadedLongGenerator implements Generator<String> {
                 String []arr=new String[generatorList.size()];
                 IntStream.range(0,generatorList.size()).forEach(i->{
                     try {
-                        arr[i]=generatorList.get(i).getNext().toString();
+                        if(i>0 && !stepCompletion[i-1].equals(true))
+                        {
+                            arr[i]=paddingValuesWithZeros(generatorList.get(i).getNext().toString());
+                        }
+                        else {
+                            arr[i]=paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
+                        }
+
                     } catch (GeneratorLimitReachedException | GeneratorException e) {
-                        arr[i]=generatorList.get(i).getCurrentValue().toString();
+                        stepCompletion[i]=true;
+                        arr[i]=paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
                     }
                 });
                 nextValue=formatValues(arr);
@@ -97,5 +106,14 @@ public class CascadedLongGenerator implements Generator<String> {
             matches++;
         }
         return builder.toString();
+    }
+
+    private String paddingValuesWithZeros(String val)
+    {
+        if(val.length()<LONG_LENGTH)
+        {
+            return String.format("%"+(LONG_LENGTH-val.length())+"s", val).replace(' ', '0');
+        }
+        return val;
     }
 }
