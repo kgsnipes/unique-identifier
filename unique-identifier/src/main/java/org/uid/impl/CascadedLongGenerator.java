@@ -19,7 +19,7 @@ public class CascadedLongGenerator implements Generator<String> {
 
     private static final int LONG_LENGTH=Long.toString(Long.MAX_VALUE).length();
 
-    private Boolean stepCompletion[];
+    private int currentStep=0;
     private String format=null;
     private final Lock lock=new ReentrantLock();
     public CascadedLongGenerator(String format, Generator<Long> ...generators) {
@@ -27,9 +27,7 @@ public class CascadedLongGenerator implements Generator<String> {
         if(regexMatchCount(PLACEHOLDER_REGEX,format)==generators.length)
         {
             this.format=format;
-            stepCompletion=new Boolean[generators.length];
             IntStream.range(0,generators.length).forEach(i->{
-                stepCompletion[i]=false;
                 generatorList.add(generators[i]);
             });
         }
@@ -55,22 +53,29 @@ public class CascadedLongGenerator implements Generator<String> {
        {
            try
            {
-                String []arr=new String[generatorList.size()];
-                IntStream.range(0,generatorList.size()).forEach(i->{
+                int LIST_SIZE=generatorList.size();
+                String []arr=new String[LIST_SIZE];
+
+                for(int i=0;i<LIST_SIZE;i++)
+                {
                     try {
-                        if(i>0 && !stepCompletion[i-1].equals(true))
-                        {
-                            arr[i]=paddingValuesWithZeros(generatorList.get(i).getNext().toString());
-                        }
-                        else {
-                            arr[i]=paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
+                        if (i == currentStep && generatorList.get(i).hasReachedLimit()) {
+                            currentStep++;
                         }
 
-                    } catch (GeneratorLimitReachedException | GeneratorException e) {
-                        stepCompletion[i]=true;
+                        if (i == currentStep) {
+                            arr[i] = paddingValuesWithZeros(generatorList.get(i).getNext().toString());
+                        } else {
+                            arr[i] = paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
+                        }
+                    }
+                    catch (GeneratorLimitReachedException | GeneratorException e)
+                    {
                         arr[i]=paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
                     }
-                });
+
+                }
+
                 nextValue=formatValues(arr);
            }
            finally {
@@ -83,6 +88,7 @@ public class CascadedLongGenerator implements Generator<String> {
 
        return nextValue;
     }
+
 
     @Override
     public Boolean hasReachedLimit() {
@@ -97,14 +103,13 @@ public class CascadedLongGenerator implements Generator<String> {
     private String formatValues(String vals[])
     {
         StringBuilder builder=new StringBuilder(this.format);
-        Pattern pattern = Pattern.compile(PLACEHOLDER_REGEX);
-        Matcher matcher = pattern.matcher(builder);
-        int matches = 0;
-        while (matcher.find()) {
-            builder.replace(matcher.start(),matcher.end(),vals[matches]);
-            matcher = pattern.matcher(builder);
-            matches++;
-        }
+        IntStream.range(0,vals.length).forEach(i->{
+            int position=i+1;
+            String token="$"+position;
+            int startOffset=builder.indexOf(token);
+            int endOffset=startOffset+token.length();
+            builder.replace(startOffset,endOffset,vals[i]);
+        });
         return builder.toString();
     }
 
