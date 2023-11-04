@@ -47,7 +47,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
     @Override
     public void reset() {
 
-        super.setValue(new AtomicLong(getStartValue()));
+        super.getValue().set(getStartValue());
         if(log.isDebugEnabled())
         {
             log.debug("Resetting to default start value");
@@ -59,10 +59,10 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         if(value !=null)
         {
             setStartValue(value);
-            super.setValue(new AtomicLong(getStartValue()));
+            super.getValue().set(getStartValue());
         }
         else {
-            super.setValue(new AtomicLong(getStartValue()));
+            super.getValue().set(getStartValue());
         }
         if(log.isDebugEnabled())
         {
