@@ -11,13 +11,8 @@ repositories {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.7'
-
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-simple
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
-
-
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
@@ -60,7 +55,7 @@ jacocoTestReport {
 jar {
 
 //    manifest {
-//        attributes "Main-Class": "com.baeldung.fatjar.Application"
+//        attributes "Main-Class": "package.Application"
 //    }
 
     from {
