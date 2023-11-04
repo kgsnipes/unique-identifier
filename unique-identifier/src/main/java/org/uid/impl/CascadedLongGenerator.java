@@ -14,8 +14,8 @@ import java.util.stream.IntStream;
 
 public class CascadedLongGenerator implements Generator<String> {
 
-    private final String PLACEHOLDER_REGEX="(\\$\\d)";
-    private List<Generator> generatorList=new ArrayList<>();
+    private static final String PLACEHOLDER_REGEX="(\\$\\d)";
+    private List<Generator<Long>> generatorList=new ArrayList<>();
 
     private static final int LONG_LENGTH=Long.toString(Long.MAX_VALUE).length();
 
@@ -27,9 +27,7 @@ public class CascadedLongGenerator implements Generator<String> {
         if(regexMatchCount(PLACEHOLDER_REGEX,format)==generators.length)
         {
             this.format=format;
-            IntStream.range(0,generators.length).forEach(i->{
-                generatorList.add(generators[i]);
-            });
+            IntStream.range(0,generators.length).forEach(i->generatorList.add(generators[i]));
         }
         else {
             throw new IllegalArgumentException("The placeholders do no match with number of generators provided");
@@ -96,7 +94,7 @@ public class CascadedLongGenerator implements Generator<String> {
 
 
     @Override
-    public Boolean hasReachedLimit() {
+    public boolean hasReachedLimit() {
         return generatorList.size()==generatorList.stream().filter(Generator::hasReachedLimit).count();
     }
 
@@ -113,7 +111,7 @@ public class CascadedLongGenerator implements Generator<String> {
         return formatValues(arr);
     }
 
-    private String formatValues(String vals[])
+    private String formatValues(String[] vals)
     {
         StringBuilder builder=new StringBuilder(this.format);
         IntStream.range(0,vals.length).forEach(i->{

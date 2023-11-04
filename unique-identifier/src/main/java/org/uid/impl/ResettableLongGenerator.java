@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.uid.ResettableGenerator;
 import org.uid.exception.GeneratorLimitReachedException;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 public class ResettableLongGenerator extends LongGenerator implements ResettableGenerator<Long,Long> {
 
     private static final Logger log= LoggerFactory.getLogger(ResettableLongGenerator.class);

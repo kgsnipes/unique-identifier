@@ -7,7 +7,7 @@ public interface Generator<T> {
 
     T getNext() throws GeneratorLimitReachedException, GeneratorException;
 
-    Boolean hasReachedLimit();
+    boolean hasReachedLimit();
 
     T getCurrentValue();
 }

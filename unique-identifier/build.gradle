@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'jacoco'
+    id "org.sonarqube" version "4.4.1.3373"
 }
 
 group 'org.uid'
@@ -38,7 +39,7 @@ jacoco {
 
 jacocoTestReport {
     reports {
-        xml.required = false
+        xml.required = true
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('html/jacoco')
     }
@@ -60,5 +61,16 @@ jar {
 
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "kgsnipes_unique-identifier"
+        property "sonar.organization", "kgsnipes"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths" , "build/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.gradle.skipCompile", "true"
+        property "sonar.coverage.exclusions", "**/*Test.java"
     }
 }

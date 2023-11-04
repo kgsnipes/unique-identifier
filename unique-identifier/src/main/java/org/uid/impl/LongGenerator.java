@@ -67,7 +67,7 @@ public class LongGenerator implements Generator<Long> {
     }
 
     @Override
-    public Boolean hasReachedLimit() {
+    public boolean hasReachedLimit() {
         return LIMIT_REACHED;
     }
 

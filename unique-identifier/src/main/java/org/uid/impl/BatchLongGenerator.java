@@ -1,12 +1,7 @@
 package org.uid.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 public class BatchLongGenerator extends ResettableLongGenerator{
 
-    private static final Logger log= LoggerFactory.getLogger(BatchLongGenerator.class);
     protected Long batchSize;
 
     public BatchLongGenerator(Long batchSize) {
