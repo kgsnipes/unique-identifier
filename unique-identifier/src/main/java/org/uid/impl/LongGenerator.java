@@ -16,7 +16,7 @@ public class LongGenerator implements Generator<Long> {
 
    protected Boolean LIMIT_REACHED=false;
     public LongGenerator() {
-        setValue(new AtomicLong(1L));
+        setValue(new AtomicLong(0L));
         setStepValue(1);
         setUpperLimitValue(Long.MAX_VALUE);
         if(log.isDebugEnabled())
@@ -30,8 +30,11 @@ public class LongGenerator implements Generator<Long> {
         setStepValue(1);
         if(getStepValue()>0)
             setUpperLimitValue(Long.MAX_VALUE);
-        else
-            setUpperLimitValue(Long.MIN_VALUE);
+
+        if(isValueAlreadyReachedLimit())
+        {
+            LIMIT_REACHED=true;
+        }
 
         if(log.isDebugEnabled())
         {
@@ -46,6 +49,11 @@ public class LongGenerator implements Generator<Long> {
             setUpperLimitValue(Long.MAX_VALUE);
         else
             setUpperLimitValue(Long.MIN_VALUE);
+
+        if(isValueAlreadyReachedLimit())
+        {
+            LIMIT_REACHED=true;
+        }
 
         if(log.isDebugEnabled())
         {
@@ -70,6 +78,11 @@ public class LongGenerator implements Generator<Long> {
 
     private Long getNextValue()throws GeneratorLimitReachedException
     {
+        if(hasReachedLimit())
+        {
+            throw new GeneratorLimitReachedException();
+        }
+
         if(getUpperLimitValue()>0)
         {
             if((getValue().get()+getStepValue())<getUpperLimitValue())
@@ -100,6 +113,11 @@ public class LongGenerator implements Generator<Long> {
             }
         }
 
+    }
+
+    private boolean isValueAlreadyReachedLimit()
+    {
+        return getUpperLimitValue()==getValue().get();
     }
 
     protected AtomicLong getValue() {

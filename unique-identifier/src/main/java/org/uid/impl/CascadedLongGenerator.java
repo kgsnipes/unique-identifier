@@ -51,6 +51,11 @@ public class CascadedLongGenerator implements Generator<String> {
         String nextValue="";
        if(lock.tryLock())
        {
+           if(hasReachedLimit())
+           {
+               throw new GeneratorLimitReachedException();
+           }
+
            try
            {
                 int LIST_SIZE=generatorList.size();
@@ -76,6 +81,8 @@ public class CascadedLongGenerator implements Generator<String> {
 
                 }
 
+
+
                 nextValue=formatValues(arr);
            }
            finally {
@@ -97,7 +104,15 @@ public class CascadedLongGenerator implements Generator<String> {
 
     @Override
     public String getCurrentValue() {
-        return null;
+
+        int LIST_SIZE=generatorList.size();
+        String []arr=new String[LIST_SIZE];
+
+        for(int i=0;i<LIST_SIZE;i++)
+        {
+            arr[i] = paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
+        }
+        return formatValues(arr);
     }
 
     private String formatValues(String vals[])
@@ -120,5 +135,10 @@ public class CascadedLongGenerator implements Generator<String> {
             return String.format("%"+(LONG_LENGTH-val.length())+"s", val).replace(' ', '0');
         }
         return val;
+    }
+
+    @Override
+    public String toString() {
+        return getCurrentValue();
     }
 }
