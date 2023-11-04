@@ -63,15 +63,8 @@ public class CascadedLongGenerator implements Generator<String> {
                 for(int i=0;i<LIST_SIZE;i++)
                 {
                     try {
-                        if (i == currentStep && generatorList.get(i).hasReachedLimit()) {
-                            currentStep++;
-                        }
-
-                        if (i == currentStep) {
-                            arr[i] = paddingValuesWithZeros(generatorList.get(i).getNext().toString());
-                        } else {
-                            arr[i] = paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
-                        }
+                        proceedNextStep(i);
+                        arr[i]=getValueForCurrentStep(i);
                     }
                     catch (GeneratorLimitReachedException | GeneratorException e)
                     {
@@ -90,6 +83,21 @@ public class CascadedLongGenerator implements Generator<String> {
        }
 
        return nextValue;
+    }
+
+    private String getValueForCurrentStep(int i) throws GeneratorLimitReachedException, GeneratorException {
+        if (i == currentStep) {
+            return paddingValuesWithZeros(generatorList.get(i).getNext().toString());
+        } else {
+            return paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
+        }
+    }
+
+    private void proceedNextStep(int i)
+    {
+        if (i == currentStep && generatorList.get(i).hasReachedLimit()) {
+            currentStep++;
+        }
     }
 
 

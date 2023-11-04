@@ -14,6 +14,8 @@ public class LongGenerator implements Generator<Long> {
    protected Integer stepValue;
    protected Long upperLimitValue;
 
+   private static final String REACHED_UPPER_LIMIT_MESSAGE="Already reached the upper limit of Long";
+
    protected Boolean LIMIT_REACHED=false;
     public LongGenerator() {
         setValue(new AtomicLong(0L));
@@ -92,7 +94,7 @@ public class LongGenerator implements Generator<Long> {
             else {
                 if(log.isDebugEnabled())
                 {
-                    log.debug("Already reached the upper limit of Long");
+                    log.debug(REACHED_UPPER_LIMIT_MESSAGE);
                 }
                 LIMIT_REACHED=true;
                 throw new GeneratorLimitReachedException();
@@ -106,7 +108,7 @@ public class LongGenerator implements Generator<Long> {
             else {
                 if(log.isDebugEnabled())
                 {
-                    log.debug("Already reached the upper limit of Long");
+                    log.debug(REACHED_UPPER_LIMIT_MESSAGE);
                 }
                 LIMIT_REACHED=true;
                 throw new GeneratorLimitReachedException();
