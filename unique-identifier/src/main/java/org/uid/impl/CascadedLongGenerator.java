@@ -49,13 +49,14 @@ public class CascadedLongGenerator implements Generator<String> {
     @Override
     public String getNext() throws GeneratorLimitReachedException, GeneratorException {
         String nextValue="";
+
+        if(hasReachedLimit())
+        {
+            throw new GeneratorLimitReachedException();
+        }
+
        if(lock.tryLock())
        {
-           if(hasReachedLimit())
-           {
-               throw new GeneratorLimitReachedException();
-           }
-
            try
            {
                 int LIST_SIZE=generatorList.size();
@@ -80,9 +81,6 @@ public class CascadedLongGenerator implements Generator<String> {
                     }
 
                 }
-
-
-
                 nextValue=formatValues(arr);
            }
            finally {

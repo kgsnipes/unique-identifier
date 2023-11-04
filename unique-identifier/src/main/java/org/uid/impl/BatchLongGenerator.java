@@ -10,7 +10,7 @@ public class BatchLongGenerator extends ResettableLongGenerator{
     protected Long batchSize;
 
     public BatchLongGenerator(Long batchSize) {
-        super(1L);
+        super(0L);
         setBatchSize(batchSize);
         setUpperLimitValue(getStartValue()+getBatchSize());
     }
