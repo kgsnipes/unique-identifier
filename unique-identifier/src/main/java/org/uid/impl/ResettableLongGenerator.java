@@ -10,27 +10,33 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ResettableLongGenerator extends LongGenerator implements ResettableGenerator<Long,Long> {
 
     private static final Logger log= LoggerFactory.getLogger(ResettableLongGenerator.class);
-
     protected Long startValue;
-
 
     public ResettableLongGenerator() {
         super();
         setStartValue(getValue().longValue());
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Resettable long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
         }
     }
 
     public ResettableLongGenerator(Long startValue) {
         super(startValue);
         setStartValue(startValue);
+        if(log.isDebugEnabled())
+        {
+            log.debug("Creating a Resettable long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
+        }
     }
 
     public ResettableLongGenerator(Long startValue,Integer stepValue) {
         super(startValue,stepValue);
         setStartValue(startValue);
+        if(log.isDebugEnabled())
+        {
+            log.debug("Creating a Resettable long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
+        }
     }
 
     @Override
@@ -40,18 +46,27 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
 
     @Override
     public void reset() {
+
         super.setValue(new AtomicLong(getStartValue()));
+        if(log.isDebugEnabled())
+        {
+            log.debug("Resetting to default start value");
+        }
     }
 
     @Override
     public void reset(Long value) {
-        if(value !=null && value<=Long.MAX_VALUE)
+        if(value !=null)
         {
             setStartValue(value);
             super.setValue(new AtomicLong(getStartValue()));
         }
         else {
             super.setValue(new AtomicLong(getStartValue()));
+        }
+        if(log.isDebugEnabled())
+        {
+            log.debug("Resetting to "+getStartValue());
         }
     }
 

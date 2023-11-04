@@ -47,6 +47,14 @@ jacocoTestReport {
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('html/jacoco')
     }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    "org/uid/exception/*"
+            ])
+        }))
+    }
 }
 
 jar {

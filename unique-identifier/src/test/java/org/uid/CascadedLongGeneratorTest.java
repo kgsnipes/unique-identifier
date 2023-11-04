@@ -1,6 +1,7 @@
 package org.uid;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,13 @@ import java.util.regex.Pattern;
 public class CascadedLongGeneratorTest {
 
     private static final Logger log= LoggerFactory.getLogger(CascadedLongGeneratorTest.class);
+
+    @BeforeAll
+    public static void beforeAll()
+    {
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel","debug");
+    }
+
     @Test
     public void testGenerator() throws GeneratorLimitReachedException, GeneratorException {
         CascadedLongGenerator generator=new CascadedLongGenerator("$1-$2-$3",new LongGenerator(),new LongGenerator(),new LongGenerator());
