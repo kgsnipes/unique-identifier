@@ -57,10 +57,10 @@ public class CascadedLongGenerator implements Generator<String> {
        {
            try
            {
-                int LIST_SIZE=generatorList.size();
-                String []arr=new String[LIST_SIZE];
+                int listSize=generatorList.size();
+                String []arr=new String[listSize];
 
-                for(int i=0;i<LIST_SIZE;i++)
+                for(int i=0;i<listSize;i++)
                 {
                     try {
                         proceedNextStep(i);
@@ -109,10 +109,10 @@ public class CascadedLongGenerator implements Generator<String> {
     @Override
     public String getCurrentValue() {
 
-        int LIST_SIZE=generatorList.size();
-        String []arr=new String[LIST_SIZE];
+        int listSize=generatorList.size();
+        String []arr=new String[listSize];
 
-        for(int i=0;i<LIST_SIZE;i++)
+        for(int i=0;i<listSize;i++)
         {
             arr[i] = paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
         }

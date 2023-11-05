@@ -3,7 +3,6 @@ package org.uid.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uid.ResettableGenerator;
-import org.uid.exception.GeneratorLimitReachedException;
 
 public class ResettableLongGenerator extends LongGenerator implements ResettableGenerator<Long,Long> {
 
@@ -15,7 +14,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         setStartValue(getValue().longValue());
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Resettable long Generator with default start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Resettable long Generator with default start value of {} and step value of {}",getValue().get(),getStepValue());
         }
     }
 
@@ -24,7 +23,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         setStartValue(startValue);
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Resettable long Generator with a defined start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Resettable long Generator with a defined start value of {} and step value of {}",getValue().get(),getStepValue());
         }
     }
 
@@ -33,14 +32,10 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         setStartValue(startValue);
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Resettable long Generator with start value of "+ getValue().get() +" and defined step value of "+getStepValue());
+            log.debug("Creating a Resettable long Generator with start value of {} and defined step value of {}",getValue().get(),getStepValue());
         }
     }
 
-    @Override
-    public Long getNext() throws GeneratorLimitReachedException {
-        return super.getNext();
-    }
 
     @Override
     public void reset() {
@@ -64,7 +59,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         }
         if(log.isDebugEnabled())
         {
-            log.debug("Resetting to "+getStartValue());
+            log.debug("Resetting to {}",getStartValue());
         }
     }
 

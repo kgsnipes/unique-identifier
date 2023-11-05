@@ -16,14 +16,14 @@ public class LongGenerator implements Generator<Long> {
 
    private static final String REACHED_UPPER_LIMIT_MESSAGE="Already reached the upper limit of Long";
 
-   protected Boolean LIMIT_REACHED=false;
+   protected Boolean limitReached=false;
     public LongGenerator() {
         setValue(new AtomicLong(0L));
         setStepValue(1);
         setUpperLimitValue(Long.MAX_VALUE);
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Long Generator with default start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Long Generator with default start value of {} and step value of {}",getValue().get(),getStepValue());
         }
     }
 
@@ -35,12 +35,12 @@ public class LongGenerator implements Generator<Long> {
 
         if(isValueAlreadyReachedLimit())
         {
-            LIMIT_REACHED=true;
+            limitReached=true;
         }
 
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Long Generator with defined start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Long Generator with defined start value of {} and step value of {}",getValue().get(),getStepValue());
         }
     }
 
@@ -54,12 +54,12 @@ public class LongGenerator implements Generator<Long> {
 
         if(isValueAlreadyReachedLimit())
         {
-            LIMIT_REACHED=true;
+            limitReached=true;
         }
 
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Long Generator with start value of "+ getValue().get() +" and defined step value of "+getStepValue());
+            log.debug("Creating a Long Generator with start value of {} and defined step value of {}",getValue().get(),getStepValue());
         }
     }
 
@@ -70,7 +70,7 @@ public class LongGenerator implements Generator<Long> {
 
     @Override
     public boolean hasReachedLimit() {
-        return LIMIT_REACHED;
+        return limitReached;
     }
 
     @Override
@@ -96,7 +96,7 @@ public class LongGenerator implements Generator<Long> {
                 {
                     log.debug(REACHED_UPPER_LIMIT_MESSAGE);
                 }
-                LIMIT_REACHED=true;
+                limitReached=true;
                 throw new GeneratorLimitReachedException();
             }
         }
@@ -110,7 +110,7 @@ public class LongGenerator implements Generator<Long> {
                 {
                     log.debug(REACHED_UPPER_LIMIT_MESSAGE);
                 }
-                LIMIT_REACHED=true;
+                limitReached=true;
                 throw new GeneratorLimitReachedException();
             }
         }
