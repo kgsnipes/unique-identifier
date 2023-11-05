@@ -136,7 +136,8 @@ public class CascadedLongGenerator implements Generator<String> {
     {
         if(val.length()<LONG_LENGTH)
         {
-            return String.format("%"+(LONG_LENGTH-val.length())+"s", val).replace(' ', '0');
+            String formattedString="%"+(LONG_LENGTH-val.length())+"s";
+            return String.format(formattedString, val).replace(' ', '0');
         }
         return val;
     }

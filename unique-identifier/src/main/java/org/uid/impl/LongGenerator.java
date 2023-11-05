@@ -23,7 +23,7 @@ public class LongGenerator implements Generator<Long> {
         setUpperLimitValue(Long.MAX_VALUE);
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Long Generator with default start value of "+ getValue().get() +" and step value of "+getStepValue());
         }
     }
 
@@ -40,7 +40,7 @@ public class LongGenerator implements Generator<Long> {
 
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Long Generator with defined start value of "+ getValue().get() +" and step value of "+getStepValue());
         }
     }
 
@@ -59,7 +59,7 @@ public class LongGenerator implements Generator<Long> {
 
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Long Generator with start value of "+ getValue().get() +" and defined step value of "+getStepValue());
         }
     }
 

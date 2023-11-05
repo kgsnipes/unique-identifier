@@ -15,7 +15,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         setStartValue(getValue().longValue());
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Resettable long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Resettable long Generator with default start value of "+ getValue().get() +" and step value of "+getStepValue());
         }
     }
 
@@ -24,7 +24,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         setStartValue(startValue);
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Resettable long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Resettable long Generator with a defined start value of "+ getValue().get() +" and step value of "+getStepValue());
         }
     }
 
@@ -33,7 +33,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         setStartValue(startValue);
         if(log.isDebugEnabled())
         {
-            log.debug("Creating a Resettable long Generator with start value of "+ getValue().get() +" and step value of "+getStepValue());
+            log.debug("Creating a Resettable long Generator with start value of "+ getValue().get() +" and defined step value of "+getStepValue());
         }
     }
 
