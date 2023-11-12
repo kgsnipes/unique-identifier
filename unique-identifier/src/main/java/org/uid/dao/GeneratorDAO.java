@@ -1,18 +1,29 @@
 package org.uid.dao;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+@DatabaseTable(tableName = "generator")
 public class GeneratorDAO {
-
+    @DatabaseField(generatedId = true)
     private Long id;
+    @DatabaseField(canBeNull = false,unique = true)
     private String code;
+    @DatabaseField(canBeNull = false)
     private String name;
+    @ForeignCollectionField(eager = true,columnName = "generatorList",orderColumnName = "generatorOrder",orderAscending = true)
     private List<GeneratorDAO> generatorList=new ArrayList<>();
+    @DatabaseField(canBeNull = false)
     private Boolean isCascaded;
+    @DatabaseField(canBeNull = false)
     private String format;
+    @DatabaseField(canBeNull = false)
     private Date createdOn;
+    @DatabaseField(canBeNull = false)
     private Date updatedOn;
     private Boolean disabled;
     private Boolean deleted;
@@ -20,6 +31,11 @@ public class GeneratorDAO {
     private String currentHostId;
     private Long upperLimit;
     private Long lowerLimit;
+
+    private Boolean isBatched;
+
+    private Boolean isResettable;
+
 
     public Long getId() {
         return id;
@@ -71,9 +87,7 @@ public class GeneratorDAO {
         this.lowerLimit = lowerLimit;
     }
 
-    private Boolean isBatched;
 
-    private Boolean isResettable;
 
     public List<GeneratorDAO> getGeneratorList() {
         return generatorList;

@@ -1,27 +1,15 @@
 package org.uid.mapper;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 import org.uid.dao.GeneratorDAO;
 import org.uid.dto.GeneratorData;
 
-public class GeneratorMapper {
+@Mapper
+public interface GeneratorMapper {
 
-    public static GeneratorDAO generatorDataToGeneratorDAO(GeneratorData data)
-    {
-        GeneratorDAO dao=new GeneratorDAO();
-        dao.setBatched(data.getBatched());
-        dao.setCascaded(data.getCascaded());
-        dao.setCode(data.getCode());
-        dao.setComplete(data.getComplete());
-        dao.setCreatedOn(data.getCreatedOn());
-        data.getGeneratorList().forEach(d->dao.getGeneratorList().add(generatorDataToGeneratorDAO(d)));
-        dao.setDeleted(data.getDeleted());
-        dao.setDisabled(data.getDisabled());
-        dao.se
-        return null;
-    }
+    GeneratorMapper INSTANCE= Mappers.getMapper(GeneratorMapper.class);
 
-    public static GeneratorData generatorDAOToGeneratorData(GeneratorDAO data)
-    {
-        return null;
-    }
+    GeneratorData generatorDAOToDTO(GeneratorDAO dao);
+    GeneratorDAO generatorDTOToDAO(GeneratorData dto);
 }
