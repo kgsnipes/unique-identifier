@@ -1,12 +1,12 @@
-package org.uid.dto;
+package org.uid.dao;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GeneratorRecordData {
+public class GeneratorRecordDAO {
 
-    private String id;
+    private Long id;
     private Long generatorId;
     private String hostId;
     private String generatorCode;
@@ -45,13 +45,6 @@ public class GeneratorRecordData {
         this.lastGeneratedValue = lastGeneratedValue;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
     public Date getCreatedOn() {
         return createdOn;
     }
@@ -60,4 +53,11 @@ public class GeneratorRecordData {
         this.createdOn = createdOn;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

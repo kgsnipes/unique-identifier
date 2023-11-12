@@ -1,27 +1,35 @@
-package org.uid.dto;
+package org.uid.dao;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GeneratorData {
+public class GeneratorDAO {
+
+    private Long id;
     private String code;
     private String name;
-    private List<GeneratorData> generatorList=new ArrayList<>();
-    private Boolean isCascaded=false;
+    private List<GeneratorDAO> generatorList=new ArrayList<>();
+    private Boolean isCascaded;
     private String format;
     private Date createdOn;
     private Date updatedOn;
-    private Boolean disabled=false;
-    private Boolean deleted=false;
-    private Boolean isComplete=false;
+    private Boolean disabled;
+    private Boolean deleted;
+    private Boolean isComplete;
     private String currentHostId;
     private Long upperLimit;
     private Long lowerLimit;
-    private Integer acceptableLoss;
-    private Boolean isBatched=false;
-    private Boolean isResettable=false;
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    private Integer acceptableLoss;
 
     public Integer getAcceptableLoss() {
         return acceptableLoss;
@@ -63,13 +71,15 @@ public class GeneratorData {
         this.lowerLimit = lowerLimit;
     }
 
+    private Boolean isBatched;
 
+    private Boolean isResettable;
 
-    public List<GeneratorData> getGeneratorList() {
+    public List<GeneratorDAO> getGeneratorList() {
         return generatorList;
     }
 
-    public void setGeneratorList(List<GeneratorData> generatorList) {
+    public void setGeneratorList(List<GeneratorDAO> generatorList) {
         this.generatorList = generatorList;
     }
 
