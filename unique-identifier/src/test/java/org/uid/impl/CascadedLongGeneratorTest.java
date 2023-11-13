@@ -1,4 +1,4 @@
-package org.uid;
+package org.uid.impl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -7,12 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
-import org.uid.impl.CascadedLongGenerator;
-import org.uid.impl.LongGenerator;
 
 import java.lang.reflect.Method;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CascadedLongGeneratorTest {
 

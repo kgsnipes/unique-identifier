@@ -1,16 +1,26 @@
 package org.uid.dao;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@DatabaseTable(tableName = "generator_record")
 public class GeneratorRecordDAO {
-
+    @DatabaseField(generatedId = true)
     private Long id;
+    @DatabaseField(canBeNull = false)
     private Long generatorId;
+    @DatabaseField(canBeNull = false)
     private String hostId;
+    @DatabaseField(canBeNull = false)
     private String generatorCode;
+    @ForeignCollectionField(eager = true,columnName = "lastGeneratedValue",orderColumnName = "valueOrder",orderAscending = true)
     private List<Long> lastGeneratedValue=new ArrayList<>();
+    @DatabaseField(canBeNull = false)
     private Date createdOn;
 
     public Long getGeneratorId() {

@@ -23,17 +23,25 @@ public class GeneratorDAO {
     private String format;
     @DatabaseField(canBeNull = false)
     private Date createdOn;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = true)
     private Date updatedOn;
+    @DatabaseField(canBeNull = false)
     private Boolean disabled;
+    @DatabaseField(canBeNull = false)
     private Boolean deleted;
+    @DatabaseField(canBeNull = false)
     private Boolean isComplete;
+    @DatabaseField(canBeNull = false)
     private String currentHostId;
+    @DatabaseField(canBeNull = false)
     private Long upperLimit;
+    @DatabaseField(canBeNull = false)
     private Long lowerLimit;
 
+    @DatabaseField(canBeNull = false)
     private Boolean isBatched;
 
+    @DatabaseField(canBeNull = false)
     private Boolean isResettable;
 
 

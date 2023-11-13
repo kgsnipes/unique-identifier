@@ -1,5 +1,7 @@
 package org.uid.exception;
 
+import java.sql.SQLException;
+
 public class GeneratorException extends Exception{
 
     public GeneratorException() {
@@ -13,5 +15,8 @@ public class GeneratorException extends Exception{
 
     public GeneratorException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public GeneratorException(Exception e) {
     }
 }

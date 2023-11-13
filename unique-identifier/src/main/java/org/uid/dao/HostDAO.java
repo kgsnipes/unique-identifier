@@ -1,15 +1,25 @@
 package org.uid.dao;
 
-import java.util.Date;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
+@DatabaseTable(tableName = "hosts")
 public class HostDAO {
 
+    @DatabaseField(generatedId = true)
     private Long id;
+    @DatabaseField(canBeNull = false)
     private String hostId;
+    @DatabaseField(canBeNull = false)
     private String hostIP;
+    @DatabaseField(canBeNull = false)
     private String hostDomain;
+    @DatabaseField(canBeNull = false)
     private String hostToken;
+    @DatabaseField(canBeNull = false)
     private Date createdOn;
+    @DatabaseField(canBeNull = true)
     private Date lastUpdateOn;
 
     public Long getId() {

@@ -1,4 +1,4 @@
-package org.uid;
+package org.uid.impl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
