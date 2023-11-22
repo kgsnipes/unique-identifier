@@ -13,23 +13,13 @@ repositories {
 
 dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '2.0.7'
-    implementation 'com.j256.ormlite:ormlite-jdbc:6.1'
+
     testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-suite-engine'
     testImplementation 'org.junit.platform:junit-platform-suite-api'
-
-    testImplementation 'com.j256.ormlite:ormlite-jdbc:6.1'
-    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
-    testImplementation 'org.xerial:sqlite-jdbc:3.43.2.2'
-    // https://mvnrepository.com/artifact/com.zaxxer/HikariCP
-    testImplementation 'com.zaxxer:HikariCP:5.1.0'
-
-
-
-
 }
 
 test {
