@@ -10,7 +10,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
     private static final Logger log= LoggerFactory.getLogger(ResettableLongGenerator.class);
     protected Long startValue;
 
-    public ResettableLongGenerator() {
+    public ResettableLongGenerator() throws GeneratorException {
         super();
         setStartValue(getValue().longValue());
         if(log.isDebugEnabled())
@@ -19,7 +19,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         }
     }
 
-    public ResettableLongGenerator(Long startValue) {
+    public ResettableLongGenerator(Long startValue) throws GeneratorException {
         super(startValue);
         setStartValue(startValue);
         if(log.isDebugEnabled())
@@ -28,8 +28,17 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         }
     }
 
-    public ResettableLongGenerator(Long startValue,Integer stepValue) {
+    public ResettableLongGenerator(Long startValue,Integer stepValue) throws GeneratorException {
         super(startValue,stepValue);
+        setStartValue(startValue);
+        if(log.isDebugEnabled())
+        {
+            log.debug("Creating a Resettable long Generator with start value of {} and defined step value of {}",getValue().get(),getStepValue());
+        }
+    }
+
+    public ResettableLongGenerator(Long startValue,Long upperLimit, Integer stepValue) throws GeneratorException {
+        super(startValue,upperLimit,stepValue);
         setStartValue(startValue);
         if(log.isDebugEnabled())
         {

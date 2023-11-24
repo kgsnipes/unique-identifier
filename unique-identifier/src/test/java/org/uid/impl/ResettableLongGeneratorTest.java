@@ -16,7 +16,7 @@ public class ResettableLongGeneratorTest {
     }
 
     @Test
-    public void testResettingValue() throws GeneratorLimitReachedException {
+    public void testResettingValue() throws GeneratorLimitReachedException, GeneratorException {
         ResettableLongGenerator generator=new ResettableLongGenerator();
         generator.getNext();
         generator.reset();
@@ -24,7 +24,7 @@ public class ResettableLongGeneratorTest {
     }
 
     @Test
-    public void testResettingValueWithStartValue() throws GeneratorLimitReachedException {
+    public void testResettingValueWithStartValue() throws GeneratorLimitReachedException, GeneratorException {
         ResettableLongGenerator generator=new ResettableLongGenerator(10L);
         generator.getNext();
         generator.reset();
@@ -32,7 +32,7 @@ public class ResettableLongGeneratorTest {
     }
 
     @Test
-    public void testResettingValueWithStartValueAndStepValue() throws GeneratorLimitReachedException {
+    public void testResettingValueWithStartValueAndStepValue() throws GeneratorLimitReachedException, GeneratorException {
         ResettableLongGenerator generator=new ResettableLongGenerator(10L,2);
         generator.getNext();
         Assertions.assertEquals(12L,generator.getCurrentValue());
@@ -60,7 +60,7 @@ public class ResettableLongGeneratorTest {
         generator.getNext();
         Assertions.assertEquals(2L,generator.getCurrentValue());
         generator.getNext();
-        generator.reset(null);
+        generator.reset(0L);
         Assertions.assertEquals(0L,generator.getCurrentValue());
         generator.getNext();
         Assertions.assertEquals(1L,generator.getCurrentValue());

@@ -14,32 +14,31 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
 
     private Character stepSeparator;
 
-    public SteppedGenerator(Integer stepIncrements) {
+    public SteppedGenerator(Integer stepIncrements) throws GeneratorException {
         init(0l,0l,1,DEFAULT_STEP_SEPARATOR);
     }
 
-    public SteppedGenerator(Integer stepIncrements,Character stepSeparator) {
+    public SteppedGenerator(Integer stepIncrements,Character stepSeparator) throws GeneratorException {
         init(0l,0l,stepIncrements,stepSeparator);
     }
 
-    public SteppedGenerator(Long step,Integer stepIncrements) {
+    public SteppedGenerator(Long step,Integer stepIncrements) throws GeneratorException {
         init(step,0l,stepIncrements,DEFAULT_STEP_SEPARATOR);
     }
 
-    public SteppedGenerator(Long step,Integer stepIncrements,Character stepSeparator) {
+    public SteppedGenerator(Long step,Integer stepIncrements,Character stepSeparator) throws GeneratorException {
         init(step,0l,stepIncrements,stepSeparator);
     }
 
-    public SteppedGenerator(Long step,Long startValue,Integer stepIncrements) {
+    public SteppedGenerator(Long step,Long startValue,Integer stepIncrements) throws GeneratorException {
         init(step,startValue,stepIncrements,DEFAULT_STEP_SEPARATOR);
     }
 
-    public SteppedGenerator(Long step,Long startValue,Integer stepIncrements,Character stepSeparator) {
+    public SteppedGenerator(Long step,Long startValue,Integer stepIncrements,Character stepSeparator) throws GeneratorException {
         init(step,startValue,stepIncrements,stepSeparator);
     }
 
-    private void init(Long step,Long startValue,Integer stepIncrements,Character stepSeparator)
-    {
+    private void init(Long step,Long startValue,Integer stepIncrements,Character stepSeparator) throws GeneratorException {
         setStepGenerator(new ResettableLongGenerator(step!=null?step:0l));
         setStepSeparator(stepSeparator!=null?stepSeparator:DEFAULT_STEP_SEPARATOR);
         setGenerator(new ResettableLongGenerator(startValue!=null?startValue:0L,stepIncrements!=null?stepIncrements:1));
