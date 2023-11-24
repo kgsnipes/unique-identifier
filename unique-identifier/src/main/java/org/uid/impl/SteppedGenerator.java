@@ -14,37 +14,34 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
     private Character stepSeparator;
 
     public SteppedGenerator(Integer stepIncrements) {
-        setStepSeparator(DEFAULT_STEP_SEPARATOR);
-        setStepGenerator(new ResettableLongGenerator(0l));
-        setGenerator(new ResettableLongGenerator(0L,stepIncrements));
+        init(0l,0l,1,DEFAULT_STEP_SEPARATOR);
     }
 
     public SteppedGenerator(Integer stepIncrements,Character stepSeparator) {
-        setStepGenerator(new ResettableLongGenerator(0l));
-        setStepSeparator(stepSeparator!=null?stepSeparator:DEFAULT_STEP_SEPARATOR);
-        setGenerator(new ResettableLongGenerator(0L,stepIncrements));
+        init(0l,0l,stepIncrements,stepSeparator);
     }
 
     public SteppedGenerator(Long step,Integer stepIncrements) {
-        setStepGenerator(new ResettableLongGenerator(step));
-        setGenerator(new ResettableLongGenerator(0L,stepIncrements));
+        init(step,0l,stepIncrements,DEFAULT_STEP_SEPARATOR);
     }
 
     public SteppedGenerator(Long step,Integer stepIncrements,Character stepSeparator) {
-        setStepGenerator(new ResettableLongGenerator(step));
-        setStepSeparator(stepSeparator!=null?stepSeparator:DEFAULT_STEP_SEPARATOR);
-        setGenerator(new ResettableLongGenerator(0L,stepIncrements));
+        init(step,0l,stepIncrements,stepSeparator);
     }
 
     public SteppedGenerator(Long step,Long startValue,Integer stepIncrements) {
-        setStepGenerator(new ResettableLongGenerator(step));
-        setGenerator(new ResettableLongGenerator(startValue,stepIncrements));
+        init(step,startValue,stepIncrements,DEFAULT_STEP_SEPARATOR);
     }
 
     public SteppedGenerator(Long step,Long startValue,Integer stepIncrements,Character stepSeparator) {
-        setStepGenerator(new ResettableLongGenerator(step));
+        init(step,startValue,stepIncrements,stepSeparator);
+    }
+
+    private void init(Long step,Long startValue,Integer stepIncrements,Character stepSeparator)
+    {
+        setStepGenerator(new ResettableLongGenerator(step!=null?step:0l));
         setStepSeparator(stepSeparator!=null?stepSeparator:DEFAULT_STEP_SEPARATOR);
-        setGenerator(new ResettableLongGenerator(startValue,stepIncrements));
+        setGenerator(new ResettableLongGenerator(0L,stepIncrements!=null?stepIncrements:1));
     }
 
     @Override
@@ -82,9 +79,25 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
     }
 
     @Override
-    public void reset(String value) {
-        if(value!=null && value.indexOf(getStepSeparator())!=-1 && Long.valueOf())
+    public void reset(String value) throws GeneratorException {
+        if(value!=null && value.indexOf(getStepSeparator())!=-1)
         {
+            String[] parts=value.split(Character.toString(getStepSeparator()));
+            if(parts.length==2)
+            {
+                try
+                {
+                    getStepGenerator().reset(Long.parseLong(parts[0]));
+                    getGenerator().reset(Long.parseLong(parts[1]));
+                }
+                catch (Exception ex)
+                {
+                    throw new GeneratorException("Cannot reset with invalid value");
+                }
+            }
+            else {
+                throw new GeneratorException("Invalid value to reset "+value);
+            }
 
         }
     }

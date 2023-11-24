@@ -3,6 +3,7 @@ package org.uid.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uid.ResettableGenerator;
+import org.uid.exception.GeneratorException;
 
 public class ResettableLongGenerator extends LongGenerator implements ResettableGenerator<Long,Long> {
 
@@ -48,14 +49,14 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
     }
 
     @Override
-    public void reset(Long value) {
+    public void reset(Long value)throws GeneratorException {
         if(value !=null)
         {
             setStartValue(value);
             super.getValue().set(getStartValue());
         }
         else {
-            super.getValue().set(getStartValue());
+            throw new GeneratorException("Cannot reset with invalid value");
         }
         if(log.isDebugEnabled())
         {

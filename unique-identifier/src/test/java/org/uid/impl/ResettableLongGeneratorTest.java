@@ -3,6 +3,7 @@ package org.uid.impl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
 import org.uid.impl.ResettableLongGenerator;
 
@@ -40,7 +41,7 @@ public class ResettableLongGeneratorTest {
     }
 
     @Test
-    public void testResettingSpecificValue() throws GeneratorLimitReachedException {
+    public void testResettingSpecificValue() throws GeneratorLimitReachedException, GeneratorException {
         ResettableLongGenerator generator=new ResettableLongGenerator();
         generator.getNext();
         generator.getNext();
@@ -53,7 +54,7 @@ public class ResettableLongGeneratorTest {
     }
 
     @Test
-    public void testResettingUpperLimit() throws GeneratorLimitReachedException {
+    public void testResettingUpperLimit() throws GeneratorLimitReachedException, GeneratorException {
         ResettableLongGenerator generator=new ResettableLongGenerator();
         generator.getNext();
         generator.getNext();
