@@ -3,11 +3,12 @@ package org.uid.impl;
 import org.uid.ResettableGenerator;
 import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
+import org.uid.util.GeneratorUtil;
 
 public class SteppedGenerator implements ResettableGenerator<String,String> {
 
-    private ResettableGenerator stepGenerator=null;
-    private ResettableGenerator generator=null;
+    private ResettableGenerator<Long,Long> stepGenerator=null;
+    private ResettableGenerator<Long,Long> generator=null;
 
     private static final Character DEFAULT_STEP_SEPARATOR='-';
 
@@ -41,7 +42,7 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
     {
         setStepGenerator(new ResettableLongGenerator(step!=null?step:0l));
         setStepSeparator(stepSeparator!=null?stepSeparator:DEFAULT_STEP_SEPARATOR);
-        setGenerator(new ResettableLongGenerator(0L,stepIncrements!=null?stepIncrements:1));
+        setGenerator(new ResettableLongGenerator(startValue!=null?startValue:0L,stepIncrements!=null?stepIncrements:1));
     }
 
     @Override
@@ -54,12 +55,13 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
         catch (GeneratorLimitReachedException ex)
         {
             incrementStep=true;
+            getGenerator().reset(0L);
         }
         if(incrementStep)
         {
             getStepGenerator().getNext();
         }
-        return String.format("%d%c%d",getStepGenerator().getCurrentValue(),getStepSeparator(),getGenerator().getCurrentValue());
+        return getCurrentValue();
     }
 
     @Override
@@ -69,7 +71,7 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
 
     @Override
     public String getCurrentValue() {
-        return String.format("%d%c%d",getStepGenerator().getCurrentValue(),getStepSeparator(),getGenerator().getCurrentValue());
+        return String.format("%s%c%s",GeneratorUtil.paddingValuesWithZeros(getStepGenerator().getCurrentValue().toString(),LONG_LENGTH),getStepSeparator(), GeneratorUtil.paddingValuesWithZeros(getGenerator().getCurrentValue().toString(),LONG_LENGTH));
     }
 
     @Override

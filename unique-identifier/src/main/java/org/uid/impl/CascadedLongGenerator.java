@@ -3,6 +3,7 @@ package org.uid.impl;
 import org.uid.Generator;
 import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
+import org.uid.util.GeneratorUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,6 @@ public class CascadedLongGenerator implements Generator<String> {
 
     private static final String PLACEHOLDER_REGEX="(\\$\\d)";
     private List<Generator<Long>> generatorList=new ArrayList<>();
-
-    private static final int LONG_LENGTH=Long.toString(Long.MAX_VALUE).length();
 
     private int currentStep=0;
     private String format=null;
@@ -68,7 +67,7 @@ public class CascadedLongGenerator implements Generator<String> {
                     }
                     catch (GeneratorLimitReachedException | GeneratorException e)
                     {
-                        arr[i]=paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
+                        arr[i]=GeneratorUtil.paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString(),LONG_LENGTH);
                     }
 
                 }
@@ -87,9 +86,9 @@ public class CascadedLongGenerator implements Generator<String> {
 
     private String getValueForCurrentStep(int i) throws GeneratorLimitReachedException, GeneratorException {
         if (i == currentStep) {
-            return paddingValuesWithZeros(generatorList.get(i).getNext().toString());
+            return GeneratorUtil.paddingValuesWithZeros(generatorList.get(i).getNext().toString(),LONG_LENGTH);
         } else {
-            return paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
+            return GeneratorUtil.paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString(),LONG_LENGTH);
         }
     }
 
@@ -114,7 +113,7 @@ public class CascadedLongGenerator implements Generator<String> {
 
         for(int i=0;i<listSize;i++)
         {
-            arr[i] = paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString());
+            arr[i] = GeneratorUtil.paddingValuesWithZeros(generatorList.get(i).getCurrentValue().toString(),LONG_LENGTH);
         }
         return formatValues(arr);
     }
@@ -130,16 +129,6 @@ public class CascadedLongGenerator implements Generator<String> {
             builder.replace(startOffset,endOffset,vals[i]);
         });
         return builder.toString();
-    }
-
-    private String paddingValuesWithZeros(String val)
-    {
-        if(val.length()<LONG_LENGTH)
-        {
-            String formattedString="%"+(LONG_LENGTH-val.length())+"s";
-            return String.format(formattedString, val).replace(' ', '0');
-        }
-        return val;
     }
 
     @Override

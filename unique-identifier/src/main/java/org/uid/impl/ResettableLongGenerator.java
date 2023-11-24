@@ -42,6 +42,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
     public void reset() {
 
         super.getValue().set(getStartValue());
+        limitReached=false;
         if(log.isDebugEnabled())
         {
             log.debug("Resetting to default start value");
@@ -54,6 +55,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
         {
             setStartValue(value);
             super.getValue().set(getStartValue());
+            limitReached=false;
         }
         else {
             throw new GeneratorException("Cannot reset with invalid value");
