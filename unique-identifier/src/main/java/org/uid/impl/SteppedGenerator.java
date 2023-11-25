@@ -5,6 +5,8 @@ import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
 import org.uid.util.GeneratorUtil;
 
+import java.util.Objects;
+
 public class SteppedGenerator implements ResettableGenerator<String,String> {
 
     private ResettableGenerator<Long,Long> stepGenerator=null;
@@ -12,29 +14,93 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
 
     private static final Character DEFAULT_STEP_SEPARATOR='-';
 
+    private static final String STEP_INCR_ERROR_MESSAGE="Step Increments cannot be null or zero or negative value";
+    private static final String STEP_ERROR_MESSAGE="Step cannot be null or zero or negative value";
+    private static final String STEP_SEPARATOR_ERROR_MESSAGE="Step separator cannot be null";
+
     private Character stepSeparator;
 
     public SteppedGenerator(Integer stepIncrements) throws GeneratorException {
+        if(Objects.isNull(stepIncrements) || stepIncrements<=0)
+        {
+            throw new GeneratorException(STEP_INCR_ERROR_MESSAGE);
+        }
         init(0l,0l,stepIncrements,DEFAULT_STEP_SEPARATOR);
     }
 
     public SteppedGenerator(Integer stepIncrements,Character stepSeparator) throws GeneratorException {
+        if(Objects.isNull(stepIncrements) || stepIncrements<=0)
+        {
+            throw new GeneratorException(STEP_INCR_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(stepSeparator))
+        {
+            throw new GeneratorException(STEP_SEPARATOR_ERROR_MESSAGE);
+        }
         init(0l,0l,stepIncrements,stepSeparator);
     }
 
     public SteppedGenerator(Long step,Integer stepIncrements) throws GeneratorException {
+        if(Objects.isNull(stepIncrements) || stepIncrements<=0)
+        {
+            throw new GeneratorException(STEP_INCR_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(step) || step<0)
+        {
+            throw new GeneratorException(STEP_ERROR_MESSAGE);
+        }
         init(step,0l,stepIncrements,DEFAULT_STEP_SEPARATOR);
     }
 
     public SteppedGenerator(Long step,Integer stepIncrements,Character stepSeparator) throws GeneratorException {
+        if(Objects.isNull(stepIncrements) || stepIncrements<=0)
+        {
+            throw new GeneratorException(STEP_INCR_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(step) || step<0)
+        {
+            throw new GeneratorException(STEP_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(stepSeparator))
+        {
+            throw new GeneratorException(STEP_SEPARATOR_ERROR_MESSAGE);
+        }
         init(step,0l,stepIncrements,stepSeparator);
     }
 
     public SteppedGenerator(Long step,Long startValue,Integer stepIncrements) throws GeneratorException {
+        if(Objects.isNull(stepIncrements) || stepIncrements<=0)
+        {
+            throw new GeneratorException(STEP_INCR_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(step) || step<0)
+        {
+            throw new GeneratorException(STEP_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(startValue) || startValue<=0)
+        {
+            throw new GeneratorException("Start value cannot be null or negative value");
+        }
         init(step,startValue,stepIncrements,DEFAULT_STEP_SEPARATOR);
     }
 
     public SteppedGenerator(Long step,Long startValue,Integer stepIncrements,Character stepSeparator) throws GeneratorException {
+        if(Objects.isNull(stepIncrements) || stepIncrements<=0)
+        {
+            throw new GeneratorException(STEP_INCR_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(step) || step<0)
+        {
+            throw new GeneratorException(STEP_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(stepSeparator))
+        {
+            throw new GeneratorException(STEP_SEPARATOR_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(startValue) || startValue<=0)
+        {
+            throw new GeneratorException("Start value cannot be null or negative value");
+        }
         init(step,startValue,stepIncrements,stepSeparator);
     }
 
@@ -100,6 +166,9 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
                 throw new GeneratorException("Invalid value to reset "+value);
             }
 
+        }
+        else {
+            throw new GeneratorException("Invalid value for reset.");
         }
     }
 
