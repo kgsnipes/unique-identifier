@@ -3,6 +3,7 @@ package org.uid.impl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
 import org.uid.impl.LongGenerator;
 
@@ -88,7 +89,7 @@ public class LongGeneratorTest {
     @Test
     public void longGeneratorWithNegativeStepValueTest()throws Exception
     {
-        longGenerator=new LongGenerator(100L,-1);
+        longGenerator=new LongGenerator(100L,1);
         IntStream.range(0,10).forEach(num-> {
             try {
                 longGenerator.getNext();
@@ -96,7 +97,7 @@ public class LongGeneratorTest {
                 throw new RuntimeException(e);
             }
         });
-        Assertions.assertEquals(90L,longGenerator.getNext());
+        Assertions.assertEquals(110L,longGenerator.getNext());
     }
 
     @Test
@@ -119,16 +120,43 @@ public class LongGeneratorTest {
         longGenerator=new LongGenerator(Long.MAX_VALUE-1);
         Assertions.assertThrowsExactly(GeneratorLimitReachedException.class,()->{
             longGenerator.getNext();
+            longGenerator.getNext();
+            longGenerator.getNext();
         });
     }
 
     @Test
-    public void longGeneratorLowerlimitTest()throws Exception
-    {
-        longGenerator=new LongGenerator(Long.MIN_VALUE+1,-1);
-        Assertions.assertThrowsExactly(GeneratorLimitReachedException.class,()->{
-            longGenerator.getNext();
-
+    public void testConstructors() throws GeneratorException {
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+            new LongGenerator(Long.MIN_VALUE,1);
         });
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+            new LongGenerator(null);
+        });
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+            new LongGenerator(null,1);
+        });
+
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+            new LongGenerator(Long.MAX_VALUE-1,-1);
+        });
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+            new LongGenerator(Long.MAX_VALUE-10,null,1);
+        });
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+            new LongGenerator(Long.MAX_VALUE-10,-10L,1);
+        });
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+            new LongGenerator(Long.MAX_VALUE-10,-10L,null);
+        });
+
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+            new LongGenerator(null,-10L,1);
+        });
+
+
+        new LongGenerator(Long.MAX_VALUE-10,Long.MAX_VALUE-5,1);
+
     }
+
 }

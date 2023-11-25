@@ -38,6 +38,7 @@ public class BatchLongGeneratorTest {
     public void testBatchGeneratorWithSmallBatchSize() throws GeneratorLimitReachedException, GeneratorException {
         BatchLongGenerator generator=new BatchLongGenerator(10000L,2L);
         generator.getNext();
+        generator.getNext();
         Assertions.assertThrowsExactly(GeneratorLimitReachedException.class,()->{
             generator.getNext();
         });
@@ -46,14 +47,7 @@ public class BatchLongGeneratorTest {
     @Test
     public void testBatchGeneratorWithStepValue() throws GeneratorLimitReachedException, GeneratorException {
         BatchLongGenerator generator=new BatchLongGenerator(10000L,2,2L);
-        Assertions.assertThrowsExactly(GeneratorLimitReachedException.class,()->{
-            generator.getNext();
-        });
-    }
-
-    @Test
-    public void testBatchGeneratorWithNegativeStepValue() throws GeneratorLimitReachedException, GeneratorException {
-        BatchLongGenerator generator=new BatchLongGenerator(10000L,-2,2L);
+        generator.getNext();
         Assertions.assertThrowsExactly(GeneratorLimitReachedException.class,()->{
             generator.getNext();
         });

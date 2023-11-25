@@ -45,7 +45,7 @@ public class CascadedLongGeneratorTest {
         CascadedLongGenerator generator=new CascadedLongGenerator("$1-$2-$3",new LongGenerator(Long.MAX_VALUE-1),new LongGenerator(),new LongGenerator());
         generator.getNext();
         generator.getNext();
-        Assertions.assertEquals("9223372036854775806-000000000000000001-000000000000000000",generator.toString());
+        Assertions.assertEquals("9223372036854775807-000000000000000000-000000000000000000",generator.toString());
     }
 
     @Test

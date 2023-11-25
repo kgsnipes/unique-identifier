@@ -2,6 +2,7 @@ package org.uid.util;
 
 public class GeneratorUtil {
 
+    private GeneratorUtil(){}
     public static String paddingValuesWithZeros(String val,Integer valueLength)
     {
         if(val.length()<valueLength)

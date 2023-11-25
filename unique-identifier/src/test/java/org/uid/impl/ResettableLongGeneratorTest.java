@@ -65,4 +65,23 @@ public class ResettableLongGeneratorTest {
         generator.getNext();
         Assertions.assertEquals(1L,generator.getCurrentValue());
     }
+
+    @Test
+    public void testConstructors()
+    {
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+           new ResettableLongGenerator(100L,null,1);
+        });
+    }
+
+    @Test
+    public void testResetting()
+    {
+        Assertions.assertThrowsExactly(GeneratorException.class,()->{
+            ResettableLongGenerator generator=new ResettableLongGenerator(100L,2000L,1);
+            generator.getNext();
+            generator.reset(null);
+
+        });
+    }
 }

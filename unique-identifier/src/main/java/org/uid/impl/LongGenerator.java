@@ -6,6 +6,7 @@ import org.uid.Generator;
 import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class LongGenerator implements Generator<Long> {
@@ -17,38 +18,61 @@ public class LongGenerator implements Generator<Long> {
 
    private static final String REACHED_UPPER_LIMIT_MESSAGE="Already reached the upper limit of Long";
 
+   private static final String START_VALUE_ERROR_MESSAGE="Start value cannot be null or less than zero";
+
+   private static final String STEP_VALUE_ERROR_MESSAGE="step value cannot be negative";
+
    protected Boolean limitReached=false;
     public LongGenerator() throws GeneratorException {
-        init(0L,null,1);
+        init(0L,Long.MAX_VALUE,1);
     }
 
     public LongGenerator(Long startValue) throws GeneratorException {
+        if(Objects.isNull(startValue) ||startValue<0)
+        {
+            throw new GeneratorException(START_VALUE_ERROR_MESSAGE);
+        }
         init(startValue,Long.MAX_VALUE,1);
     }
 
     public LongGenerator(Long startValue,Integer stepValue) throws GeneratorException {
-        init(startValue,null,stepValue);
+        if(Objects.isNull(startValue) || startValue<0)
+        {
+            throw new GeneratorException(START_VALUE_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(stepValue)|| stepValue<0)
+        {
+            throw new GeneratorException(STEP_VALUE_ERROR_MESSAGE);
+        }
+        init(startValue,Long.MAX_VALUE,stepValue);
     }
 
     public LongGenerator(Long startValue,Long upperLimit, Integer stepValue) throws GeneratorException {
+
+        if(Objects.isNull(startValue) || startValue<0)
+        {
+            throw new GeneratorException(START_VALUE_ERROR_MESSAGE);
+        }
+        if(Objects.isNull(stepValue)|| stepValue<0)
+        {
+            throw new GeneratorException(STEP_VALUE_ERROR_MESSAGE);
+        }
+
+        if(Objects.isNull(upperLimit)|| upperLimit<0)
+        {
+            throw new GeneratorException("upper limit value cannot be negative");
+        }
+
         init(startValue,upperLimit,stepValue);
     }
 
-    private void init(Long startValue,Long upperLimit,Integer stepValue) throws GeneratorException {
-        if(stepValue==0)
-        {
-            throw new GeneratorException("Step value cannot be zero");
-        }
+    private void init(Long startValue,Long upperLimit,Integer stepValue) {
         setValue(new AtomicLong(startValue));
         setStepValue(stepValue);
-
-        if(upperLimit!=null)
+        setUpperLimitValue(upperLimit);
+        if(isValueAlreadyReachedLimit())
         {
-            setUpperLimitValue(upperLimit);
-            if(isValueAlreadyReachedLimit())
-            {
-                limitReached=true;
-            }
+            limitReached=true;
         }
 
         if(log.isDebugEnabled())
@@ -78,60 +102,28 @@ public class LongGenerator implements Generator<Long> {
         {
             throw new GeneratorLimitReachedException();
         }
-
-        if(getUpperLimitValue()!=null)
+        if((getValue().get()+getStepValue())<=getUpperLimitValue() && (getValue().get()+getStepValue())>=0)
         {
-            return incrementBasedOnLimits(getUpperLimitValue());
-        }
-        else
-        {
-            if(getStepValue()>0) {
-                return incrementBasedOnLimits(Long.MAX_VALUE);
-            }
-            else {
-                return incrementBasedOnLimits(Long.MIN_VALUE);
-            }
-
-        }
-
-
-    }
-
-    private Long incrementBasedOnLimits(Long upperLimit) throws GeneratorLimitReachedException {
-        if(upperLimit>0)
-        {
-            if((getValue().get()+getStepValue())<upperLimit)
-            {
-                return getValue().getAndAdd(getStepValue());
-            }
-            else {
-                if(log.isDebugEnabled())
-                {
-                    log.debug(REACHED_UPPER_LIMIT_MESSAGE);
-                }
-                limitReached=true;
-                throw new GeneratorLimitReachedException();
-            }
+            return getValue().getAndAdd(getStepValue());
         }
         else {
-            if((getValue().get()+getStepValue())>upperLimit)
-            {
-                return getValue().getAndAdd(getStepValue());
-            }
-            else {
-                if(log.isDebugEnabled())
-                {
-                    log.debug(REACHED_UPPER_LIMIT_MESSAGE);
-                }
-                limitReached=true;
-                throw new GeneratorLimitReachedException();
-            }
+            setLimitReachedAndLogIt();
         }
+        return getCurrentValue();
+    }
+
+    private void setLimitReachedAndLogIt() throws GeneratorLimitReachedException {
+        if(log.isDebugEnabled())
+        {
+            log.debug(REACHED_UPPER_LIMIT_MESSAGE);
+        }
+        limitReached=true;
+        throw new GeneratorLimitReachedException();
     }
 
     private boolean isValueAlreadyReachedLimit()
     {
-        return getUpperLimitValue()==getValue().get();
+        return getUpperLimitValue().longValue()==getValue().get() || getValue().get()==Long.MAX_VALUE;
     }
 
     protected AtomicLong getValue() {

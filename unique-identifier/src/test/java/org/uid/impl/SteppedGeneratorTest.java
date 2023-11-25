@@ -26,6 +26,7 @@ public class SteppedGeneratorTest {
     public void testStepGeneratorValueForLimitExceededOnGenerator() throws GeneratorLimitReachedException, GeneratorException {
         ResettableGenerator<String,String> generator=new SteppedGenerator(2L,Long.MAX_VALUE-2,2,'=');
         generator.getNext();
+        generator.getNext();
         String value1= generator.getNext();
         Assertions.assertEquals("000000000000000003=000000000000000002",value1);
     }
@@ -41,5 +42,12 @@ public class SteppedGeneratorTest {
             System.out.println(generator.getCurrentValue());
         });
 
+    }
+
+    @Test
+    public void testLong()
+    {
+        System.out.println(Long.MIN_VALUE+1);
+        System.out.println(Long.MIN_VALUE-1);
     }
 }

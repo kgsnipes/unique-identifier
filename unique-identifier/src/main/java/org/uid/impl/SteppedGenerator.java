@@ -15,7 +15,7 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
     private Character stepSeparator;
 
     public SteppedGenerator(Integer stepIncrements) throws GeneratorException {
-        init(0l,0l,1,DEFAULT_STEP_SEPARATOR);
+        init(0l,0l,stepIncrements,DEFAULT_STEP_SEPARATOR);
     }
 
     public SteppedGenerator(Integer stepIncrements,Character stepSeparator) throws GeneratorException {
@@ -103,19 +103,19 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
         }
     }
 
-    public ResettableGenerator getStepGenerator() {
+    public ResettableGenerator<Long, Long> getStepGenerator() {
         return stepGenerator;
     }
 
-    public void setStepGenerator(ResettableGenerator stepGenerator) {
+    public void setStepGenerator(ResettableGenerator<Long, Long> stepGenerator) {
         this.stepGenerator = stepGenerator;
     }
 
-    public ResettableGenerator getGenerator() {
+    public ResettableGenerator<Long, Long> getGenerator() {
         return generator;
     }
 
-    public void setGenerator(ResettableGenerator generator) {
+    public void setGenerator(ResettableGenerator<Long, Long> generator) {
         this.generator = generator;
     }
 
