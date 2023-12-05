@@ -27,11 +27,11 @@ public class BatchLongGenerator extends ResettableLongGenerator{
             setUpperLimitValue(getStartValue()-getBatchSize());
     }
 
-    protected Long getBatchSize() {
+    public Long getBatchSize() {
         return batchSize;
     }
 
-    protected void setBatchSize(Long batchSize) {
+    public void setBatchSize(Long batchSize) {
         this.batchSize = batchSize;
     }
 
