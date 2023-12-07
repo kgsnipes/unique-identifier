@@ -60,7 +60,7 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
 
     @Override
     public void reset(Long value)throws GeneratorException {
-        if(value !=null)
+        if(value !=null && value>=0L)
         {
             setStartValue(value);
             super.getValue().set(getStartValue());
