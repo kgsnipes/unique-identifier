@@ -5,9 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.uid.Generator;
 import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
+import org.uid.exception.GeneratorLockException;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class LongGenerator implements Generator<Long> {
 
@@ -15,6 +18,8 @@ public class LongGenerator implements Generator<Long> {
    protected AtomicLong value;
    protected Integer stepValue;
    protected Long upperLimitValue;
+
+   private Lock lock=new ReentrantLock(true);
 
    private static final String REACHED_UPPER_LIMIT_MESSAGE="Already reached the upper limit of Long";
 
@@ -98,16 +103,27 @@ public class LongGenerator implements Generator<Long> {
 
     private Long getNextValue()throws GeneratorLimitReachedException
     {
-        if(hasReachedLimit())
-        {
-            throw new GeneratorLimitReachedException();
+        try {
+            if(lock.tryLock()) {
+                if(hasReachedLimit())
+                {
+                    throw new GeneratorLimitReachedException();
+                }
+                if((getValue().get()+getStepValue())<=getUpperLimitValue() && (getValue().get()+getStepValue())>=0)
+                {
+                    return getValue().getAndAdd(getStepValue());
+                }
+                else {
+                    setLimitReachedAndLogIt();
+                }
+            }
+            else {
+                throw new GeneratorLockException("Could not get a lock on the generator");
+            }
         }
-        if((getValue().get()+getStepValue())<=getUpperLimitValue() && (getValue().get()+getStepValue())>=0)
+        finally
         {
-            return getValue().getAndAdd(getStepValue());
-        }
-        else {
-            setLimitReachedAndLogIt();
+            lock.unlock();
         }
         return getCurrentValue();
     }

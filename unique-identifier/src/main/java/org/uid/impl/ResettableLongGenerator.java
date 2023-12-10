@@ -4,11 +4,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.uid.ResettableGenerator;
 import org.uid.exception.GeneratorException;
+import org.uid.exception.GeneratorLockException;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class ResettableLongGenerator extends LongGenerator implements ResettableGenerator<Long,Long> {
 
     private static final Logger log= LoggerFactory.getLogger(ResettableLongGenerator.class);
     protected Long startValue;
+
+    private Lock lock=new ReentrantLock(true);
 
     public ResettableLongGenerator() throws GeneratorException {
         super();
@@ -49,30 +55,48 @@ public class ResettableLongGenerator extends LongGenerator implements Resettable
 
     @Override
     public void reset() {
-
-        super.getValue().set(getStartValue());
-        limitReached=false;
-        if(log.isDebugEnabled())
-        {
-            log.debug("Resetting to default start value");
+        try {
+            if (lock.tryLock()) {
+                super.getValue().set(getStartValue());
+                limitReached = false;
+                if (log.isDebugEnabled()) {
+                    log.debug("Resetting to default start value");
+                }
+            } else {
+                throw new GeneratorLockException("Could not get a lock on the generator");
+            }
         }
+        finally
+        {
+            lock.unlock();
+        }
+
     }
 
     @Override
     public void reset(Long value)throws GeneratorException {
-        if(value !=null && value>=0L)
+        try {
+            if(lock.tryLock()) {
+                if (value != null && value >= 0L) {
+                    setStartValue(value);
+                    super.getValue().set(getStartValue());
+                    limitReached = false;
+                } else {
+                    throw new GeneratorException("Cannot reset with invalid value");
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug("Resetting to {}", getStartValue());
+                }
+            }
+            else {
+                throw new GeneratorLockException("Could not get a lock on the generator");
+            }
+        }
+        finally
         {
-            setStartValue(value);
-            super.getValue().set(getStartValue());
-            limitReached=false;
+            lock.unlock();
         }
-        else {
-            throw new GeneratorException("Cannot reset with invalid value");
-        }
-        if(log.isDebugEnabled())
-        {
-            log.debug("Resetting to {}",getStartValue());
-        }
+
     }
 
     protected Long getStartValue() {

@@ -3,9 +3,12 @@ package org.uid.impl;
 import org.uid.ResettableGenerator;
 import org.uid.exception.GeneratorException;
 import org.uid.exception.GeneratorLimitReachedException;
+import org.uid.exception.GeneratorLockException;
 import org.uid.util.GeneratorUtil;
 
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class SteppedGenerator implements ResettableGenerator<String,String> {
 
@@ -19,6 +22,8 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
     private static final String STEP_SEPARATOR_ERROR_MESSAGE="Step separator cannot be null";
 
     private Character stepSeparator;
+
+    private Lock lock=new ReentrantLock(true);
 
     public SteppedGenerator(Integer stepIncrements) throws GeneratorException {
         if(Objects.isNull(stepIncrements) || stepIncrements<=0)
@@ -113,18 +118,29 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
     @Override
     public String getNext() throws GeneratorLimitReachedException, GeneratorException {
 
-        boolean incrementStep=false;
-        try{
-            getGenerator().getNext();
+        try {
+            if(lock.tryLock()) {
+                boolean incrementStep=false;
+                try{
+                    getGenerator().getNext();
+                }
+                catch (GeneratorLimitReachedException ex)
+                {
+                    incrementStep=true;
+                    getGenerator().reset(0L);
+                }
+                if(incrementStep)
+                {
+                    getStepGenerator().getNext();
+                }
+            }
+            else {
+                throw new GeneratorLockException("Could not get a lock on the generator");
+            }
         }
-        catch (GeneratorLimitReachedException ex)
+        finally
         {
-            incrementStep=true;
-            getGenerator().reset(0L);
-        }
-        if(incrementStep)
-        {
-            getStepGenerator().getNext();
+            lock.unlock();
         }
         return getCurrentValue();
     }
@@ -141,34 +157,54 @@ public class SteppedGenerator implements ResettableGenerator<String,String> {
 
     @Override
     public void reset() {
-        getStepGenerator().reset();
-        getGenerator().reset();
+        try {
+            if (lock.tryLock()) {
+                getStepGenerator().reset();
+                getGenerator().reset();
+            } else {
+                throw new GeneratorLockException("Could not get a lock on the generator");
+            }
+        }
+        finally
+        {
+            lock.unlock();
+        }
     }
 
     @Override
     public void reset(String value) throws GeneratorException {
-        if(value!=null && value.indexOf(getStepSeparator())!=-1)
-        {
-            String[] parts=value.split(Character.toString(getStepSeparator()));
-            if(parts.length==2)
-            {
-                try
+        try {
+            if (lock.tryLock()) {
+                if(value!=null && value.indexOf(getStepSeparator())!=-1)
                 {
-                    getStepGenerator().reset(Long.parseLong(parts[0]));
-                    getGenerator().reset(Long.parseLong(parts[1]));
-                }
-                catch (Exception ex)
-                {
-                    throw new GeneratorException("Cannot reset with invalid value");
-                }
-            }
-            else {
-                throw new GeneratorException("Invalid value to reset "+value);
-            }
+                    String[] parts=value.split(Character.toString(getStepSeparator()));
+                    if(parts.length==2)
+                    {
+                        try
+                        {
+                            getStepGenerator().reset(Long.parseLong(parts[0]));
+                            getGenerator().reset(Long.parseLong(parts[1]));
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new GeneratorException("Cannot reset with invalid value");
+                        }
+                    }
+                    else {
+                        throw new GeneratorException("Invalid value to reset "+value);
+                    }
 
+                }
+                else {
+                    throw new GeneratorException("Invalid value for reset.");
+                }
+            } else {
+                throw new GeneratorLockException("Could not get a lock on the generator");
+            }
         }
-        else {
-            throw new GeneratorException("Invalid value for reset.");
+        finally
+        {
+            lock.unlock();
         }
     }
 
